@@ -1,29 +1,31 @@
-<hr>
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">#<%= ID %> Тема занятия: <%= title %>
+<% for(d of data) {%>
+    <div class="card my-3">
+        <div class="card-header" style="<%= d.status == 1 ? 'background-color: #a3ffa3' : 'background-color: #ffa3a3' %>">
+            <h5 class="card-title">#<%= d.ID %> Тема занятия: <%= d.title %>
             </h5>
         </div>
         <div class="card-body">
             <p class="card-text">Список учеников</p>
-            <% students.forEach(function(student) {%>
-                <p class="card-text">ID: <%= student.id %>, Имя: <%= student.name %>, 
-                    <% if (student.visit) { %>
-                        Присутствовал
-                    <% } %>
-                    <% if (!student.visit) { %>
-                        Не присутствовал
-                    <% } %></p>
+            <% d.students.forEach(function(student) {%>
+                <p class="card-text">ID: <%= student.id %>, Имя: <%= student.name %>,
+                            <% if (student.visit) { %>
+                                Присутствовал
+                            <% } %>
+                            <% if (!student.visit) { %>
+                                Не присутствовал
+                            <% } %>
+                </p>
             <% }); %>
-            <p class="card-text">Список Учителей</p>
-            <% teachers.forEach(function(teacher) {%>
-                <p class="card-text">ID: <%= teacher.id %>, Имя: <%= teacher.name %> 
-                    </p>
-            <% }); %>
+                    <p class="card-text">Список Учителей</p>
+                    <% d.teachers.forEach(function(teacher) {%>
+                        <p class="card-text">ID: <%= teacher.id %>, Имя: <%= teacher.name %>
+                        </p>
+                    <% }); %>
         </div>
         <div class="card-footer text-muted">
-            <%= visitCount %> <i class="fas fa-user-check"></i> <%= date %> <i class="fas fa-calendar-alt"></i>
+            <%= d.visitCount %> <i class="fas fa-user-check"></i>
+            <%= d.date %> <i class="fas fa-calendar-alt"></i>
         </div>
     </div>
-</div>
+    <hr>
+<% }; %>

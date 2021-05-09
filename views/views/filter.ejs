@@ -1,28 +1,58 @@
-<div class="container">
-  <form method="POST" class="m-3">
-    <div class="form-group">
-      <div style="display: inline-flex;">
-        <label for="inputDate" class="mx-3">С</label>
-        <input type="date" class="form-control">
-        <label for="inputDate" class="mx-3">По</label>
-        <input type="date" class="form-control">
-        <label for="inputDate" class="mx-3">Количество учеников от:</label>
-        <input type="text" class="form-control">
-        <label for="inputDate" class="mx-3">до: </label>
-        <input type="text" class="form-control">
-      </div>
-      <div style="display: inline-flex;">
-        <label for="inlineFormInputName2" class="mx-3">ID учителя</label>
-        <input type="text" class="form-control" id="inlineFormInputName2" placeholder="id,...">
-        <label for="inputDate" class="mx-3">Номер страницы </label>
-        <input type="text" class="form-control">
-        <label for="inputDate" class="mx-3">Количество страниц: </label>
-        <input type="text" class="form-control">
-        <label class="form-check-label mx-3" for="inlineFormCheck">
-          проведено?
-        </label>
-        <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-      </div>
+<form method="POST" class="m-3 p-3 border rounded sticky-top">
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-2 col-form-label col-form-label-sm">С: </label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control">
     </div>
-  </form>
-</div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-2 col-form-label col-form-label-sm">По: </label>
+    <div class="col-sm-10">
+      <input type="date" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-sm-12 col-form-label">Количество учеников:</label>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-2 col-form-label col-form-label-sm">От: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-2 col-form-label col-form-label-sm">До:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-6 col-form-label col-form-label-sm">ID учителя:</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-6 col-form-label col-form-label-sm">Номер страницы:</label>
+    <div class="col-sm-6">
+      <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="inputDate" class="col-sm-7 col-form-label col-form-label-sm">Количество страниц:</label>
+    <div class="col-sm-5">
+      <input type="text" class="form-control">
+    </div>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+    <label class="form-check-label" for="defaultCheck1">
+      Проведено?
+    </label>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-primary mt-3">Применить</button>
+    </div>
+  </div>
+</form>

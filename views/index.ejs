@@ -9,19 +9,18 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
     <title>Занятия</title>
 </head>
-<style>
-    .card-header{
-        <% if (status) { %>
-            background-color: #b4ffd2;
-        <% } %>
-        <% if (!status) { %>
-            background-color: #ffb4b4;
-        <% } %>
-    }
-</style>
+
 <body>
     <%- include("./views/navbar.ejs") %>
-    <%- include("./views/filter.ejs") %>
-    <%- include("./views/cards.ejs") %>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <%- include("./views/filter.ejs") %>
+            </div>
+            <div class="col-8">
+                <%- include("./views/cards.ejs") %>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
