@@ -6,5 +6,8 @@ module.exports.Teachers = database.sequelize.define('teachers', {
         primaryKey: true,
         allowNull: false,
     },
-    title: database.DataTypes.STRING(10),
-});
+    name: database.DataTypes.STRING(10)
+},
+    {
+        timestamps: false
+    });

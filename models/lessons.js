@@ -14,5 +14,8 @@ module.exports.Lessons = database.sequelize.define('lessons', {
     status: {
         type: database.DataTypes.INTEGER,
         defaultValue: 0,
-    },
-});
+    }
+},
+    {
+        timestamps: false
+    });
