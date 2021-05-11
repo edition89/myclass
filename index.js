@@ -1,9 +1,20 @@
-const express = require('express')
+const express = require('express');
+const sequelize = require('./database')
 const app = express()
 
+/* Models*/
+const ls_t = require('./models/lesson_students');
+const lt_t = require('./models/lesson_teachers');
+const l_t = require('./models/lessons');
+const s_t = require('./models/students');
+const t_t = require('./models/teachers');
+/* Models*/
+(async () => {
+  console.log(await l_t.Lessons.findAll({ attributes: ['id', 'date', 'title', 'status'] }))
+})();
 app.set('view engine', 'ejs')
 
-app.get('/', function (req, res) {
+app.get('/', async function (req, res) {
   var data = [{
     ID: 1,
     date: new Date().toLocaleDateString("ru-RU"),
@@ -20,85 +31,12 @@ app.get('/', function (req, res) {
       name: 'Tanya'
     }]
   },
-  {
-    ID: 1,
-    date: new Date().toLocaleDateString("ru-RU"),
-    title: 'Зеленый',
-    status: 0,
-    visitCount: 42,
-    students: [
-      {
-        id: 2,
-        name: 'Светлана',
-        visit: true,
-      },
-      {
-        id: 3,
-        name: 'Тамара',
-        visit: false,
-      }
-    ],
-    teachers: [{
-      id: 1,
-      name: 'Tanya'
-    }]
-  },
-  {
-    ID: 1,
-    date: new Date().toLocaleDateString("ru-RU"),
-    title: 'Зеленый',
-    status: 1,
-    visitCount: 42,
-    students: [{
-      id: 2,
-      name: 'Светлана',
-      visit: true,
-    }],
-    teachers: [
-      {
-        id: 1,
-        name: 'Tanya'
-      },
-      {
-        id: 2,
-        name: 'Vika'
-      }
-    ]
-  },
-  {
-    ID: 1,
-    date: new Date().toLocaleDateString("ru-RU"),
-    title: 'Зеленый',
-    status: 0,
-    visitCount: 42,
-    students: [{
-      id: 2,
-      name: 'Светлана',
-      visit: true,
-    }],
-    teachers: [{
-      id: 1,
-      name: 'Tanya'
-    }]
-  },
-  {
-    ID: 1,
-    date: new Date().toLocaleDateString("ru-RU"),
-    title: 'Зеленый',
-    status: 0,
-    visitCount: 42,
-    students: [{
-      id: 2,
-      name: 'Светлана',
-      visit: true,
-    }],
-    teachers: [{
-      id: 1,
-      name: 'Tanya'
-    }]
-  },
   ]
-  res.render(__dirname + "/views/index.ejs", {data: data})
+  res.render(__dirname + "/views/index.ejs", { data: data })
+})
+
+app.get('/lessons', function (req, res) {
+  res.render(__dirname + "/views/lessons.ejs")
 })
 
 app.listen(3000)

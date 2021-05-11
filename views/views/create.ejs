@@ -1,0 +1,56 @@
+<form id="create" class="my-3">
+    <div class="form-group">
+        <label for="id">ID учителей, ведущих занятия</label>
+        <input type="text" class="form-control" name="id" id="id" placeholder="1,2" required>
+    </div>
+    <div class="form-group">
+        <label for="title">Тема занятия</label>
+        <input type="text" class="form-control" name="title" id="title" required>
+    </div>
+    <div class="form-group">
+        <label for="days">Дни недели, 0 - это воскресенье</label>
+        <input type="text" class="form-control" name="days" id="days" placeholder="1,3,5" required>
+    </div>
+    <div class="form-group">
+        <label for="firsDate">Первое занятие </label>
+        <input type="date" name="firstDate" id="firstDate" class="form-control" required>
+    </div>
+    <div class="form-group row form-inline" style="justify-content: space-around;">
+        <div class="form-check form-check-inline col-sm-2">
+            <input class="form-check-input" type="radio" name="radio" id="radioType1" value="1" checked>
+            <label class="form-check-label" for="radioType1">
+                Количество занятий:
+            </label>
+        </div>
+        <div class="col-sm-3">
+            <input type="text" name="lessonsCount" id="lessonsCount" class="form-control" required>
+        </div>
+        <div class="form-check form-check-inline col-sm-2">
+            <input class="form-check-input" type="radio" name="radio" id="radioType2" value="2">
+            <label class="form-check-label" for="radioType2">
+                Последнее занятие:
+            </label>
+        </div>
+        <div class="col-sm-3">
+            <input type="date" name="lastDate" id="lastDate" class="form-control" required readonly>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+
+<script>
+    $(function() {
+        $('input[name="radio"]').click(function(e){
+            if(e.target.value == 1){
+                $("#lessonsCount").prop('readonly', false);
+                $("#lastDate").prop('readonly', true);
+                $("#lastDate").val('');
+            }
+            else{
+                $("#lessonsCount").prop('readonly', true);
+                $("#lessonsCount").val('');
+                $("#lastDate").prop('readonly', false);
+            }
+        });
+    });
+</script>
