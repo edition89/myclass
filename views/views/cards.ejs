@@ -1,13 +1,13 @@
 <% for(d of data) {%>
     <div class="card my-3">
         <div class="card-header" style="<%= d.status == 1 ? 'background-color: #a3ffa3' : 'background-color: #ffa3a3' %>">
-            <h5 class="card-title">#<%= d.ID %> Тема занятия: <%= d.title %>
+            <h5 class="card-title">#<%= d.id %> Тема занятия: <%= d.title %>
             </h5>
         </div>
         <div class="card-body">
             <p class="card-text">Список учеников</p>
             <% d.students.forEach(function(student) {%>
-                <p class="card-text">ID: <%= student.id %>, Имя: <%= student.name %>,
+                <p class="card-text">ID: <%= student.student.id %>, Имя: <%= student.student.name %>,
                             <% if (student.visit) { %>
                                 Присутствовал
                             <% } %>
@@ -18,7 +18,7 @@
             <% }); %>
                     <p class="card-text">Список Учителей</p>
                     <% d.teachers.forEach(function(teacher) {%>
-                        <p class="card-text">ID: <%= teacher.id %>, Имя: <%= teacher.name %>
+                        <p class="card-text">ID: <%= teacher.teacher.id %>, Имя: <%= teacher.teacher.name %>
                         </p>
                     <% }); %>
         </div>
