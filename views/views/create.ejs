@@ -1,15 +1,59 @@
-<form id="create" class="my-3">
+<form method="POST" id="create" class="my-3">
     <div class="form-group">
-        <label for="id">ID учителей, ведущих занятия</label>
-        <input type="text" class="form-control" name="id" id="id" placeholder="1,2" required>
+        <label for="first_teacher">Первый учитель</label>
+        <select id="first_teacher" name="first_teacher" class="custom-select">
+            <option value="undefined" selected>Не выбран...</option>
+            <% for(t of teachers) {%>
+                <option value="<%= t.id %>">
+                    <%= t.name%>
+                </option>
+                <%}%>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="second_teacher">Второй учитель</label>
+        <select id="second_teacher" name="second_teacher" class="custom-select">
+            <option value="undefined" selected>Не выбран...</option>
+            <% for(t of teachers) {%>
+                <option value="<%= t.id %>">
+                    <%= t.name%>
+                </option>
+                <%}%>
+        </select>
     </div>
     <div class="form-group">
         <label for="title">Тема занятия</label>
         <input type="text" class="form-control" name="title" id="title" required>
     </div>
-    <div class="form-group">
-        <label for="days">Дни недели, 0 - это воскресенье</label>
-        <input type="text" class="form-control" name="days" id="days" placeholder="1,3,5" required>
+    <div class="form-group form-inline" style="justify-content: space-between;">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_1" id="day_1" value="1">
+            <label class="form-check-label" for="day_1">Понедельник</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_2" id="day_2" value="2">
+            <label class="form-check-label" for="day_2">Вторник</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_3" id="day_3" value="3">
+            <label class="form-check-label" for="day_3">Среда</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_4" id="day_4" value="4">
+            <label class="form-check-label" for="day_4">Четверг</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_5" id="day_5" value="5">
+            <label class="form-check-label" for="day_5">Пятница</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_" id="day_6" value="6">
+            <label class="form-check-label" for="day_6">Суббота</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="day_0" id="day_0" value="0">
+            <label class="form-check-label" for="day_0">Воскресенье</label>
+        </div>
     </div>
     <div class="form-group">
         <label for="firsDate">Первое занятие </label>
@@ -39,18 +83,22 @@
 </form>
 
 <script>
-    $(function() {
-        $('input[name="radio"]').click(function(e){
-            if(e.target.value == 1){
+    $(function () {
+        $('input[name="radio"]').click(function (e) {
+            if (e.target.value == 1) {
                 $("#lessonsCount").prop('readonly', false);
                 $("#lastDate").prop('readonly', true);
                 $("#lastDate").val('');
             }
-            else{
+            else {
                 $("#lessonsCount").prop('readonly', true);
                 $("#lessonsCount").val('');
                 $("#lastDate").prop('readonly', false);
             }
+        });
+        $('select').on('change', function () {
+            let elem = this.id == 'first_teacher' ? $('#second_teacher') : $('#first_teacher')
+            if (this.value == elem.val()) this.value = "undefined"
         });
     });
 </script>

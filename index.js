@@ -36,7 +36,7 @@ app.get('/', async function (req, res, next) {
       ['lesson_id', 'ASC'],
     ]
   });
-  let lessons = await l_t.Lessons.findAll({
+  let lessons = await l_t.Lessons.findAndCountAll({
     attributes: ['id', 'date', 'title', 'status'],
     order: [
       ['id', 'ASC'],
@@ -57,8 +57,8 @@ app.get('/', async function (req, res, next) {
     limit: 5,
     offset: 0,
   });
-
-  lessons = JSON.parse(JSON.stringify(lessons, null, 2))
+  let count = lessons.count - 1
+  lessons = JSON.parse(JSON.stringify(lessons.rows, null, 2))
   students = JSON.parse(JSON.stringify(students, null, 2))
 
   for (l of lessons) {
@@ -74,9 +74,7 @@ app.get('/', async function (req, res, next) {
       if (l['id'] == s['lesson_id'] && s['visit']) l.visitCount++
     }
   }
-  const itemCount = lessons.length;
-  const pageCount = Math.ceil(itemCount / 5);
-  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, pageCount, itemCount, pages: paginate.getArrayPages(req)(3, pageCount, 1)})
+  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, current: 1, pages: Math.ceil(count / 5)})
 })
 
 app.post('/', urlencodedParser, async function (req, res, next) {
@@ -97,7 +95,7 @@ app.post('/', urlencodedParser, async function (req, res, next) {
       ['lesson_id', 'ASC'],
     ]
   });
-  let lessons = await l_t.Lessons.findAll({
+  let lessons = await l_t.Lessons.findAndCountAll({
     attributes: ['id', 'date', 'title', 'status'],
     order: [
       ['id', 'ASC'],
@@ -110,18 +108,23 @@ app.post('/', urlencodedParser, async function (req, res, next) {
         model: t_t.Teachers,
         where: where_id_teacher,
       },
+      duplicating: false,
       order: [
         ['lesson_id', 'ASC'],
       ],
       required: true,
-      right: true
     },
     limit: +condition.page_count,
     offset: (condition.page - 1) * condition.page_count,
   });
 
-  lessons = JSON.parse(JSON.stringify(lessons, null, 2))
+  let count = lessons.count - 1
+  lessons = JSON.parse(JSON.stringify(lessons.rows, null, 2))
   students = JSON.parse(JSON.stringify(students, null, 2))
+  
+  console.log(condition)
+  console.log(count)
+  console.log(lessons.length)
   for (l of lessons) {
     l.students = []
     l.visitCount = 0
@@ -139,14 +142,30 @@ app.post('/', urlencodedParser, async function (req, res, next) {
     lessons = lessons.filter(lesson => lesson.visitCount >= condition.student_from);
   if (condition.student_to != '')
     lessons = lessons.filter(lesson => lesson.visitCount <= condition.student_to);
-  console.log(condition)
-  const itemCount = lessons.length;
-  const pageCount = Math.ceil(itemCount / condition.page_count);
-  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, pageCount, itemCount, pages: paginate.getArrayPages(req)(3, pageCount, condition.page)})
+  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, current: condition.page, pages: Math.ceil(count / condition.page_count)})
 })
 
-app.get('/lessons', function (req, res) {
-  res.render(__dirname + "/views/lessons.ejs")
+app.get('/lessons', async function (req, res) {
+  let teachers = await t_t.Teachers.findAll({
+    order: [
+      ['id', 'ASC'],
+    ]
+  });
+  teachers = JSON.parse(JSON.stringify(teachers, null, 2))
+  res.render(__dirname + "/views/lessons.ejs", {teachers: teachers})
+})
+
+app.post('/lessons', urlencodedParser, async function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  let condition = JSON.parse(JSON.stringify(req.body))
+  console.log(condition)
+  let teachers = await t_t.Teachers.findAll({
+    order: [
+      ['id', 'ASC'],
+    ]
+  });
+  teachers = JSON.parse(JSON.stringify(teachers, null, 2))
+  res.render(__dirname + "/views/lessons.ejs", {teachers: teachers})
 })
 
 app.listen(3000)

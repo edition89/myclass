@@ -25,32 +25,32 @@
     </div>
     <hr>
     <% }; %>
-<nav>
+<nav aria-label="Page navigation example">
 <% if (pages > 0) { %>
     <ul class="pagination text-center">
         <% if (current == 1) { %>
-            <li class="disabled page-item"><a class="page-item">Первая</a></li>
+            <li class="disabled page-item"><a class="page-link">Первая</a></li>
         <% } else { %>
-            <li class="page-item"><a href="/1" class="page-link">Первая</a></li>
+            <li class="page-item"><a href="/" class="page-link">Первая</a></li>
         <% } %>
         <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
         <% if (i !== 1) { %>
-            <li class="disabled page-item"><a class="page-item">...</a></li>
+            <li class="disabled page-item"><a class="page-link">...</a></li>
         <% } %>
         <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
             <% if (i == current) { %>
-                <li class="active page-item"><a class="page-item"><%= i %></a></li>
+                <li class="active page-item"><a class="page-link"><%= i %></a></li>
             <% } else { %>
-                <li class="page-item"><a href="/<%= i %>" class="page-item"><%= i %></a></li>
+                <li class="page-item"><a href="/" class="page-link"><%= i %></a></li>
             <% } %>
             <% if (i == Number(current) + 4 && i < pages) { %>
-                <li class="disabled page-item"><a class="page-item">...</a></li>
+                <li class="disabled page-item"><a class="page-link">...</a></li>
             <% } %>
         <% } %>
         <% if (current == pages) { %>
-            <li class="disabled page-item"><a class="page-item">Последняя</a></li>
+            <li class="disabled page-item"><a class="page-link">Последняя</a></li>
         <% } else { %>
-            <li class="page-item"><a href="/<%= pages %>" class="page-item">Последняя</a></li>
+            <li class="page-item"><a href="/" class="page-link">Последняя</a></li>
         <% } %>
     </ul>
 <% } %>
