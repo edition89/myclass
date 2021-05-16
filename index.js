@@ -1,10 +1,11 @@
 const express = require('express')
+const paginate = require('express-paginate');
 const bodyParser = require('body-parser')
 const database = require('./database')
 const app = express()
 const Op = database.Op
 
-
+app.use(paginate.middleware(10, 50));
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 /* Models*/
@@ -27,14 +28,7 @@ s_t.Students.hasMany(ls_t.Lesson_students)
 
 app.set('view engine', 'ejs')
 
-app.get('/', async function (req, res) {
-  let teachers = await lt_t.Lesson_teachers.findAll({
-    attributes: ['lesson_id'],
-    include: t_t.Teachers,
-    order: [
-      ['lesson_id', 'ASC'],
-    ]
-  });
+app.get('/', async function (req, res, next) {
   let students = await ls_t.Lesson_students.findAll({
     attributes: ['lesson_id', 'visit'],
     include: s_t.Students,
@@ -46,21 +40,30 @@ app.get('/', async function (req, res) {
     attributes: ['id', 'date', 'title', 'status'],
     order: [
       ['id', 'ASC'],
-    ]
+    ],
+    where: {status: 1},
+    include:{
+      attributes: ['lesson_id'],
+      model: lt_t.Lesson_teachers,
+      include: {
+        model: t_t.Teachers,
+      },
+      order: [
+        ['lesson_id', 'ASC'],
+      ],
+      required: true,
+      right: true
+    },
+    limit: 5,
+    offset: 0,
   });
 
   lessons = JSON.parse(JSON.stringify(lessons, null, 2))
-  teachers = JSON.parse(JSON.stringify(teachers, null, 2))
   students = JSON.parse(JSON.stringify(students, null, 2))
 
   for (l of lessons) {
-    l.teachers = []
     l.students = []
     l.visitCount = 0
-    for (let t of teachers) {
-      if (l['id'] < t['lesson_id']) break
-      else if (l['id'] == t['lesson_id']) l.teachers.push(t)
-    }
     for (let s of students) {
       if (l['id'] < s['lesson_id']) {
         break
@@ -71,26 +74,22 @@ app.get('/', async function (req, res) {
       if (l['id'] == s['lesson_id'] && s['visit']) l.visitCount++
     }
   }
-  res.render(__dirname + "/views/index.ejs", { data: lessons })
+  const itemCount = lessons.length;
+  const pageCount = Math.ceil(itemCount / 5);
+  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, pageCount, itemCount, pages: paginate.getArrayPages(req)(3, pageCount, 1)})
 })
 
-app.post('/', urlencodedParser, async function (req, res) {
+app.post('/', urlencodedParser, async function (req, res, next) {
   if (!req.body) return res.sendStatus(400)
-  let condition = req.body
-  if (condition.dt_from && condition.dt_to) var where_date = { date: { [Op.and]: [{ [Op.gte]: condition.dt_from }, { [Op.lte]: condition.dt_to }] } }
-  if (condition.id_teacher) var where_id_teacher = { id: condition.id_teacher }
-  if (condition.status) var where_status = {status: condition.status }
+  let condition = JSON.parse(JSON.stringify(req.body))
+  if (condition.status == undefined) condition.status = 0
+  let where_data = { status: +condition.status }
+  let where_id_teacher = { id: { [Op.ne]: null } }
+  if(condition.dt_from != '' && condition.dt_to != '') where_data.date = { [Op.and]: [{ [Op.gte]: condition.dt_from }, { [Op.lte]: condition.dt_to }] }
+  else if(condition.dt_from != '') where_data.date = {[Op.gt]: condition.dt_from}
+  else if(condition.dt_to != '') where_data.date = {[Op.lte]: condition.dt_to}
+  if (condition.id_teacher) where_id_teacher = { id: condition.id_teacher }
 
-  let teachers = await lt_t.Lesson_teachers.findAll({
-    attributes: ['lesson_id'],
-    include: {
-      model: t_t.Teachers,
-      where: where_id_teacher
-    },
-    order: [
-      ['lesson_id', 'ASC'],
-    ],
-  });
   let students = await ls_t.Lesson_students.findAll({
     attributes: ['lesson_id', 'visit'],
     include: s_t.Students,
@@ -103,21 +102,29 @@ app.post('/', urlencodedParser, async function (req, res) {
     order: [
       ['id', 'ASC'],
     ],
-    where: where_date, where_status
+    where: where_data,
+    include:{
+      attributes: ['lesson_id'],
+      model: lt_t.Lesson_teachers,
+      include: {
+        model: t_t.Teachers,
+        where: where_id_teacher,
+      },
+      order: [
+        ['lesson_id', 'ASC'],
+      ],
+      required: true,
+      right: true
+    },
+    limit: +condition.page_count,
+    offset: (condition.page - 1) * condition.page_count,
   });
 
   lessons = JSON.parse(JSON.stringify(lessons, null, 2))
-  teachers = JSON.parse(JSON.stringify(teachers, null, 2))
   students = JSON.parse(JSON.stringify(students, null, 2))
-
   for (l of lessons) {
-    l.teachers = []
     l.students = []
     l.visitCount = 0
-    for (let t of teachers) {
-      if (l['id'] < t['lesson_id']) break
-      else if (l['id'] == t['lesson_id']) l.teachers.push(t)
-    }
     for (let s of students) {
       if (l['id'] < s['lesson_id']) {
         break
@@ -128,8 +135,14 @@ app.post('/', urlencodedParser, async function (req, res) {
       if (l['id'] == s['lesson_id'] && s['visit']) l.visitCount++
     }
   }
-  lessons = lessons.filter(lesson => lesson.visitCount >= condition.student_from && lesson.visitCount <= condition.student_to);
-  res.render(__dirname + "/views/index.ejs", { data: lessons })
+  if (condition.student_from != '')
+    lessons = lessons.filter(lesson => lesson.visitCount >= condition.student_from);
+  if (condition.student_to != '')
+    lessons = lessons.filter(lesson => lesson.visitCount <= condition.student_to);
+  console.log(condition)
+  const itemCount = lessons.length;
+  const pageCount = Math.ceil(itemCount / condition.page_count);
+  res.render(__dirname + "/views/index.ejs", { data: lessons, condition: {}, pageCount, itemCount, pages: paginate.getArrayPages(req)(3, pageCount, condition.page)})
 })
 
 app.get('/lessons', function (req, res) {

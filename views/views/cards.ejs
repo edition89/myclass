@@ -1,6 +1,7 @@
 <% for(d of data) {%>
     <div class="card my-3">
-        <div class="card-header" style="<%= d.status == 1 ? 'background-color: #a3ffa3' : 'background-color: #ffa3a3' %>">
+        <div class="card-header"
+            style="<%= d.status == 1 ? 'background-color: #a3ffa3' : 'background-color: #ffa3a3' %>">
             <h5 class="card-title">#<%= d.id %> Тема занятия: <%= d.title %>
             </h5>
         </div>
@@ -10,22 +11,47 @@
                 <p class="card-text">ID: <%= student.student.id %>, Имя: <%= student.student.name %>,
                             <% if (student.visit) { %>
                                 Присутствовал
-                            <% } %>
-                            <% if (!student.visit) { %>
-                                Не присутствовал
-                            <% } %>
+                                <% } %>
+                                    <% if (!student.visit) { %>
+                                        Не присутствовал
+                                        <% } %>
                 </p>
-            <% }); %>
-                    <p class="card-text">Список Учителей</p>
-                    <% d.teachers.forEach(function(teacher) {%>
-                        <p class="card-text">ID: <%= teacher.teacher.id %>, Имя: <%= teacher.teacher.name %>
-                        </p>
-                    <% }); %>
+                <% }); %>
         </div>
         <div class="card-footer text-muted">
             <%= d.visitCount %> <i class="fas fa-user-check"></i>
-            <%= d.date %> <i class="fas fa-calendar-alt"></i>
+                <%= d.date %> <i class="fas fa-calendar-alt"></i>
         </div>
     </div>
     <hr>
-<% }; %>
+    <% }; %>
+<nav>
+<% if (pages > 0) { %>
+    <ul class="pagination text-center">
+        <% if (current == 1) { %>
+            <li class="disabled page-item"><a class="page-item">Первая</a></li>
+        <% } else { %>
+            <li class="page-item"><a href="/1" class="page-link">Первая</a></li>
+        <% } %>
+        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+        <% if (i !== 1) { %>
+            <li class="disabled page-item"><a class="page-item">...</a></li>
+        <% } %>
+        <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+            <% if (i == current) { %>
+                <li class="active page-item"><a class="page-item"><%= i %></a></li>
+            <% } else { %>
+                <li class="page-item"><a href="/<%= i %>" class="page-item"><%= i %></a></li>
+            <% } %>
+            <% if (i == Number(current) + 4 && i < pages) { %>
+                <li class="disabled page-item"><a class="page-item">...</a></li>
+            <% } %>
+        <% } %>
+        <% if (current == pages) { %>
+            <li class="disabled page-item"><a class="page-item">Последняя</a></li>
+        <% } else { %>
+            <li class="page-item"><a href="/<%= pages %>" class="page-item">Последняя</a></li>
+        <% } %>
+    </ul>
+<% } %>
+</nav>

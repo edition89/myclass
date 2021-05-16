@@ -1,14 +1,14 @@
-<form method="POST" class="m-3 p-3 border rounded sticky-top">
+<form method="POST" action="/" class="m-3 p-3 border rounded sticky-top">
   <div class="form-group row">
     <label for="dt_from" class="col-sm-2 col-form-label col-form-label-sm">С: </label>
     <div class="col-sm-10">
-      <input type="date" name="dt_from" id="dt_from" class="form-control">
+      <input type="date" name="dt_from" id="dt_from" class="form-control" value="<%= condition.dt_from %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="dt_to" class="col-sm-2 col-form-label col-form-label-sm">По: </label>
     <div class="col-sm-10">
-      <input type="date" name="dt_to" id="dt_to" class="form-control">
+      <input type="date" name="dt_to" id="dt_to" class="form-control" value="<%= condition.dt_to %>">
     </div>
   </div>
   <div class="form-group row">
@@ -17,35 +17,35 @@
   <div class="form-group row">
     <label for="student_from" class="col-sm-2 col-form-label col-form-label-sm">От: </label>
     <div class="col-sm-10">
-      <input type="text" name="student_from" id="student_from" class="form-control">
+      <input type="text" name="student_from" id="student_from" class="form-control" value="<%= condition.student_from %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="student_to" class="col-sm-2 col-form-label col-form-label-sm">До:</label>
     <div class="col-sm-10">
-      <input type="text" name="student_to" id="student_to" class="form-control">
+      <input type="text" name="student_to" id="student_to" class="form-control" value="<%= condition.student_to %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="id_teacher" class="col-sm-6 col-form-label col-form-label-sm">ID учителя:</label>
     <div class="col-sm-6">
-      <input type="text" name="id_teacher" id="id_teacher" class="form-control">
+      <input type="text" name="id_teacher" id="id_teacher" class="form-control" value="<%= condition.id_teacher %>">
     </div>
   </div>
   <div class="form-group row">
     <label for="page" class="col-sm-6 col-form-label col-form-label-sm">Номер страницы:</label>
     <div class="col-sm-6">
-      <input type="text" name="page" id="page" class="form-control">
+      <input type="text" name="page" id="page" class="form-control" value="<%= condition.page == undefined ? 1 : condition.page%>">
     </div>
   </div>
   <div class="form-group row">
     <label for="page_count" class="col-sm-7 col-form-label col-form-label-sm">Количество страниц:</label>
     <div class="col-sm-5">
-      <input type="text" name="page_count" id="page_count" class="form-control">
+      <input type="text" name="page_count" id="page_count" class="form-control" value="<%= condition.page_count == undefined ? 5 : condition.page_count%>">
     </div>
   </div>
   <div class="form-check">
-    <input class="form-check-input" name="status" id="status" type="checkbox" value="1" id="defaultCheck1">
+    <input class="form-check-input" name="status" id="status" type="checkbox" value="1" <%= condition.status != 0 ? 'checked' : ''  %>>
     <label class="form-check-label" for="status">
       Проведено?
     </label>
